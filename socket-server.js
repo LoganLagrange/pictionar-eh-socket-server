@@ -11,8 +11,12 @@ const initializeSocketServer = (server) => {
             handleJoinRoom(io, socket, room)
         })
     
-        socket.on('message', (message) => {
+        socket.on('message', (room, message) => {
             handleMessage(io, socket, room, message)
+        })
+
+        socket.on('draw', (room, change) => {
+            handleDraw(io, socket, room, change)
         })
     })
 

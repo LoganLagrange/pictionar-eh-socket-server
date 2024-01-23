@@ -8,11 +8,12 @@ const handleJoinRoom = (io, socket, room) => {
 }
 
 const handleMessage = (io, socket, room, message) => {
-    console.log(`Received message from ${socket.id}: ${message}`)
+    console.log(`Received message from ${socket.id}: ${message} in room ${room}`)
     io.to(room).emit('broadcastMessage', {message})
 }
 
 const handleDraw = (io, socket, room, change) => {
+    console.log(`Draw event from socket ${socket.id} in room: ${room}`)
     io.to(room).emit('drawChange', {change})
 }
 
