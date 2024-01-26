@@ -4,7 +4,7 @@ const initializeSocketServer = require('./socket-server'); //Imports socket serv
 
 // Sets up the Express App
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 5001;
 
 // Creating HTTP server from Express app
 const httpServer = http.createServer(app); // Create HTTP server
