@@ -55,11 +55,16 @@ const handleDisconnect = (io, socket, roomData, socketRoomMap) => {
     console.log(roomData)
 }
 
+const handleRoomRequest = (io, socket, roomData) => {
+    io.to(socket.id).emit('activeRooms', roomData);
+}
+
 module.exports = {
     handleConnection,
     handleJoinRoom,
     handleMessage,
     handleDraw,
     handleLeave,
-    handleDisconnect
+    handleDisconnect,
+    handleRoomRequest
 }
