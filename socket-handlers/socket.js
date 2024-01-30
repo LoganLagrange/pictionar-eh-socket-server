@@ -4,6 +4,7 @@ const handleConnection = (io, socket) => {
 
 const handleJoinRoom = (io, socket, room, roomData) => {
     socket.join(room);
+    console.log(`${socket.id} joined room ${room}`)
     socket.emit(`Welcome to ${room}`)
     if (!roomData[room]) {
         roomData[room] = {count: 1}
@@ -11,6 +12,7 @@ const handleJoinRoom = (io, socket, room, roomData) => {
         roomData[room].count += 1;
     }
     io.to(room).emit("updateRoomData", roomData[room])
+    console.log(roomData);
 }
 
 const handleMessage = (io, socket, room, message, roomData) => {
@@ -25,7 +27,7 @@ const handleDraw = (io, socket, room, change, roomData) => {
 
 const handleLeave = (io, socket, room, roomData) => {
     socket.leave(room);
-    console.log(`Socket ${socket} left room ${room}`);
+    console.log(`Socket ${socket.id} left room ${room}`);
     if(roomData[room]) {
         roomData[room].count -= 1;
 
@@ -35,7 +37,22 @@ const handleLeave = (io, socket, room, roomData) => {
             io.to(room).emit('updateRoomData', roomData[room])
         }
     }
+    console.log(roomData)
+}
 
+const handleDisconnect = (io, socket, roomData, socketRoomMap) => {
+    const roomId = socketRoomMap[socket.id];
+
+    if(roomId && roomData[roomId]) {
+        roomData[roomId].count -= 1;
+
+        if(roomData[roomId].count <= 0) {
+            delete roomData[roomId]
+        } else [
+            io.to(roomId).emit('updateRoomData', roomData[roomId])
+        ]
+    }
+    console.log(roomData)
 }
 
 module.exports = {
@@ -43,5 +60,6 @@ module.exports = {
     handleJoinRoom,
     handleMessage,
     handleDraw,
-    handleLeave
+    handleLeave,
+    handleDisconnect
 }
