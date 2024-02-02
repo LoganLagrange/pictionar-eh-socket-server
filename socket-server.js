@@ -1,5 +1,5 @@
-const {Server} = require('socket.io');
-const {handleConnection, handleJoinRoom, handleMessage, handleLeave, handleDisconnect, handleRoomRequest} = require('./socket-handlers/socket')
+const { Server } = require('socket.io');
+const { handleDraw, handleConnection, handleJoinRoom, handleMessage, handleLeave, handleDisconnect, handleRoomRequest } = require('./socket-handlers/socket')
 
 const initializeSocketServer = (server) => {
     const io = new Server(server, {
@@ -18,7 +18,7 @@ const initializeSocketServer = (server) => {
             handleJoinRoom(io, socket, room, roomData)
             socketRoomMap[socket.id] = room;
         })
-    
+
         socket.on('message', (room, message) => {
             handleMessage(io, socket, room, message, roomData)
         })
