@@ -11,8 +11,9 @@ const handleJoinRoom = (io, socket, room, roomData) => {
     } else {
         roomData[room].count += 1;
     }
+    roomData[room].users.push(socket.id);
     io.to(room).emit("updateRoomData", roomData[room])
-    
+
 }
 
 const handleMessage = (io, socket, room, message, roomData) => {
@@ -38,6 +39,13 @@ const handleLeave = (io, socket, room, roomData) => {
             io.to(room).emit('updateRoomData', roomData[room])
         }
     }
+    // Get the index of the user who left
+    const userIndex = roomData[room].users.indexOf(socket.id);
+    // Check that they are present in the array and remove
+    if(index !== -1) {
+        roomData[room].users.splice(index, 1);
+    }
+
     console.log(roomData)
 }
 
