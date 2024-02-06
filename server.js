@@ -2,6 +2,7 @@ const express = require("express");
 const http = require("http");
 const initializeSocketServer = require('./socket-server'); //Imports socket server setup
 const cors = require('cors');
+const {getRandomWord} = require('./middleware/randomAnswer')
 
 // Sets up the Express App
 const app = express();
@@ -15,5 +16,7 @@ const httpServer = http.createServer(app); // Create HTTP server
 const io = initializeSocketServer(httpServer);
 
 httpServer.listen(PORT, function() {
+    const randomWord = getRandomWord()
+    console.log(randomWord)
     console.log('App listening on PORT ' + PORT);
 });
