@@ -8,7 +8,20 @@ const initializeSocketServer = (server) => {
             methods: ["GET", "POST"]
         }
     });
-    const roomData = {};
+    const roomData = {
+        room1: {
+            users: [],
+            count: 1
+        },
+        room2: {
+            users: [],
+            count: 2
+        },
+        boomboominmyroom: {
+            users: [],
+            count: 1
+        }
+    };
     const socketRoomMap = {};
 
     io.on('connection', (socket) => {
@@ -17,6 +30,7 @@ const initializeSocketServer = (server) => {
         socket.on('join', (room) => {
             handleJoinRoom(io, socket, room, roomData)
             socketRoomMap[socket.id] = room;
+            console.log(`socketmap: ${socketRoomMap}`)
         })
 
         socket.on('message', (room, message) => {

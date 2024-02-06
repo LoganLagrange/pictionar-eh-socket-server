@@ -12,7 +12,7 @@ const handleJoinRoom = (io, socket, room, roomData) => {
         roomData[room].count += 1;
     }
     io.to(room).emit("updateRoomData", roomData[room])
-    console.log(roomData);
+    
 }
 
 const handleMessage = (io, socket, room, message, roomData) => {
