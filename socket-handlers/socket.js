@@ -1,3 +1,5 @@
+const {selectDrawer} = require('../middleware/selectDrawer')
+
 const handleConnection = (io, socket) => {
     console.log(`User connected: ${socket.id}`)
 }
@@ -12,6 +14,7 @@ const handleJoinRoom = (io, socket, room, roomData) => {
         roomData[room].count += 1;
     }
     roomData[room].users.push(socket.id);
+    console.log(roomData[room])
     io.to(room).emit("updateRoomData", roomData[room])
 
 }
@@ -19,17 +22,18 @@ const handleJoinRoom = (io, socket, room, roomData) => {
 const handleMessage = (io, socket, room, message, roomData) => {
     console.log(`Received message from ${socket.id}: ${message} in room ${room}`)
     io.to(room).emit('broadcastMessage', { message })
+    selectDrawer(io, socket, room, roomData);
 }
 
 const handleDraw = (io, socket, room, change, roomData) => {
     console.log(`Draw event from socket ${socket.id} in room: ${room}`)
-        // console.log(change); //socket is able to read the change 
+    // console.log(change); //socket is able to read the change 
     io.to(room).emit('drawChange', { change })
 }
 
 const handleLeave = (io, socket, room, roomData) => {
     socket.leave(room);
-    console.log(`Socket ${socket.id} left room ${room}`);
+    // console.log(`Socket ${socket.id} left room ${room}`);
     if (roomData[room]) {
         roomData[room].count -= 1;
 
@@ -38,15 +42,16 @@ const handleLeave = (io, socket, room, roomData) => {
         } else {
             io.to(room).emit('updateRoomData', roomData[room])
         }
-    }
-    // Get the index of the user who left
-    const userIndex = roomData[room].users.indexOf(socket.id);
-    // Check that they are present in the array and remove
-    if(index !== -1) {
-        roomData[room].users.splice(index, 1);
+
+        // Get the index of the user who left
+        const userIndex = roomData[room].users.indexOf(socket.id);
+        // Check that they are present in the array and remove
+        if (index !== -1) {
+            roomData[room].users.splice(index, 1);
+        }
     }
 
-    console.log(roomData)
+    // console.log(roomData)
 }
 
 const handleDisconnect = (io, socket, roomData, socketRoomMap) => {
@@ -57,7 +62,7 @@ const handleDisconnect = (io, socket, roomData, socketRoomMap) => {
 
         if (roomData[roomId].count <= 0) {
             delete roomData[roomId]
-        } else [
+        } else[
             io.to(roomId).emit('updateRoomData', roomData[roomId])
         ]
     }
