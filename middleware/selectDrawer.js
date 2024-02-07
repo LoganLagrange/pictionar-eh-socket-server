@@ -15,10 +15,6 @@ function selectDrawer(io, socket, room, roomData) {
             // Send true value to selected user
             io.to(selectedUserId).emit('userSelect', drawer);
 
-            // Filter out the selected to user to avoid duplicate messages
-            // const otherUsers = roomData[room].users.filter(userId => {
-            //     userId !== selectedUserId
-            // })
             // Send false value to other users
             roomData[room].users.forEach(userId => {
                 if (userId !== selectedUserId) {
@@ -34,10 +30,6 @@ function selectDrawer(io, socket, room, roomData) {
         // Send true value to selected user
         io.to(selectedUserId).emit('userSelect', drawer);
 
-        // Filter out the selected to user to avoid duplicate messages
-        // const otherUsers = roomData[room].users.filter(userId => {
-        //     userId !== selectedUserId
-        // })
         // Send false value to other users
         roomData[room].users.forEach(userId => {
             if (userId !== selectedUserId) {
