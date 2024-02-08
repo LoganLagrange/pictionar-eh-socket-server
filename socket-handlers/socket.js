@@ -28,7 +28,7 @@ const handleMessage = (io, socket, room, message, roomData) => {
 const handleDraw = (io, socket, room, change, roomData) => {
     console.log(`Draw event from socket ${socket.id} in room: ${room}`)
     // console.log(change); //socket is able to read the change 
-    io.to(room).emit('drawChange', { change })
+    io.to(room).emit('drawChange',  change )
 }
 
 const handleLeave = (io, socket, room, roomData) => {
