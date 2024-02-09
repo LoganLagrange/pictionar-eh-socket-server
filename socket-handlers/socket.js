@@ -21,15 +21,15 @@ const handleJoinRoom = (io, socket, room, roomData) => {
 
 }
 
-const handleMessage = (io, socket, room, message, roomData) => {
+const handleMessage = (io, socket, room, message, roomData, username) => {
     console.log(`Received message from ${socket.id}: ${message} in room ${room}`)
     // Check if currentWord exists
     if(roomData[room].currentWord) {
         // Check if word matches and send corresponding boolean value
         const correctBool = checkForWinningPhrase(message, roomData[room].currentWord);
-        io.to(room).emit('broadcastMessage', { message }, correctBool);
+        io.to(room).emit('broadcastMessage', { message }, username, correctBool);
     } else {
-        io.to(room).emit('broadcastMessage', { message });
+        io.to(room).emit('broadcastMessage', { message }, username);
     }
     
 }

@@ -34,8 +34,8 @@ const initializeSocketServer = (server) => {
             console.log(`socketmap: ${socketRoomMap}`)
         })
 
-        socket.on('message', (room, message) => {
-            handleMessage(io, socket, room, message, roomData)
+        socket.on('message', (room, message, username) => {
+            handleMessage(io, socket, room, message, roomData, username)
         })
 
         socket.on('draw', (room, change) => {
