@@ -23,7 +23,9 @@ const handleJoinRoom = (io, socket, room, roomData) => {
 
 const handleMessage = (io, socket, room, message, roomData) => {
     console.log(`Received message from ${socket.id}: ${message} in room ${room}`)
+    // Check if currentWord exists
     if(roomData[room].currentWord) {
+        // Check if word matches and send corresponding boolean value
         const correctBool = checkForWinningPhrase(message, roomData[room].currentWord);
         io.to(room).emit('broadcastMessage', { message }, correctBool);
     } else {
@@ -94,10 +96,6 @@ const gameFunction = (io, socket, room, roomData) => {
     }).catch(err => {
         console.error("Error fetching word:", err);
     })
-
-    // 3. Start timer
-
-    // 4. Intake guesses from users, validate against current word
 
     // 5. Assign scores for correct words based on time left, and display on front end.
 
