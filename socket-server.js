@@ -11,7 +11,8 @@ const initializeSocketServer = (server) => {
     const roomData = {
         room1: {
             users: [],
-            count: 1
+            count: 1,
+            currentWord: 'tacos'
         },
         room2: {
             users: [],

@@ -53,7 +53,7 @@ const handleLeave = (io, socket, room, roomData) => {
         // Get the index of the user who left
         const userIndex = roomData[room].users.indexOf(socket.id);
         // Check that they are present in the array and remove
-        if (index !== -1) {
+        if (userIndex !== -1) {
             roomData[room].users.splice(index, 1);
         }
     }

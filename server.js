@@ -17,7 +17,7 @@ const httpServer = http.createServer(app); // Create HTTP server
 const io = initializeSocketServer(httpServer);
 
 httpServer.listen(PORT, function() {
-    gameFunction()
+    // gameFunction()
     // console.log(randomWord)
     console.log('App listening on PORT ' + PORT);
 });
