@@ -19,3 +19,5 @@ function checkForWinningPhrase(inboundString, randomlySelectedWord) {
 // const randomlySelectedWordSingle = "test";
 // const resultSingleWord = checkForWinningPhrase(inboundStringSingleWord, randomlySelectedWordSingle);
 // console.log(resultSingleWord);  // Output will be true
+
+module.exports = {checkForWinningPhrase};

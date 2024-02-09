@@ -1,4 +1,6 @@
 const {selectDrawer} = require('../middleware/selectDrawer')
+const {getRandomWord} = require('../middleware/randomAnswer')
+const {checkForWinningPhrase} = require('../middleware/answerEval')
 
 const handleConnection = (io, socket) => {
     console.log(`User connected: ${socket.id}`)
@@ -73,10 +75,20 @@ const handleRoomRequest = (io, socket, roomData) => {
     io.to(socket.id).emit('activeRooms', roomData);
 }
 
-const gameFunction = (io, socket, roomData) => {
+const gameFunction = (io, socket, room, roomData) => {
     // 1.Choose word and store in room data as currentWord
+    getRandomWord().then(word => {
+        // Store word in the roomData
+        roomData[room].currentWord = word;
 
-    // 2. Choose who draws
+        // Choose who draws
+        selectDrawer(io, socket, room, roomData)
+
+        // 
+
+    }).catch(err => {
+        console.error("Error fetching word:", err);
+    })
 
     // 3. Start timer
 
@@ -94,5 +106,6 @@ module.exports = {
     handleDraw,
     handleLeave,
     handleDisconnect,
-    handleRoomRequest
+    handleRoomRequest,
+    gameFunction
 }
