@@ -73,6 +73,20 @@ const handleRoomRequest = (io, socket, roomData) => {
     io.to(socket.id).emit('activeRooms', roomData);
 }
 
+const gameFunction = (io, socket, roomData) => {
+    // 1.Choose word and store in room data as currentWord
+
+    // 2. Choose who draws
+
+    // 3. Start timer
+
+    // 4. Intake guesses from users, validate against current word
+
+    // 5. Assign scores for correct words based on time left, and display on front end.
+
+    // 6. Loop if 2 or more people are still in room
+}
+
 module.exports = {
     handleConnection,
     handleJoinRoom,
