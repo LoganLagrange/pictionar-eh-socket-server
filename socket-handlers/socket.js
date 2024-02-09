@@ -23,8 +23,13 @@ const handleJoinRoom = (io, socket, room, roomData) => {
 
 const handleMessage = (io, socket, room, message, roomData) => {
     console.log(`Received message from ${socket.id}: ${message} in room ${room}`)
-    io.to(room).emit('broadcastMessage', { message })
-    selectDrawer(io, socket, room, roomData);
+    if(roomData[room].currentWord) {
+        const correctBool = checkForWinningPhrase(message, roomData[room].currentWord);
+        io.to(room).emit('broadcastMessage', { message }, correctBool);
+    } else {
+        io.to(room).emit('broadcastMessage', { message });
+    }
+    
 }
 
 const handleDraw = (io, socket, room, change, roomData) => {
