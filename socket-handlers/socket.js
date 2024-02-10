@@ -1,5 +1,37 @@
-const {selectDrawer} = require('../middleware/selectDrawer')
+const { selectDrawer } = require('../middleware/selectDrawer')
+var timeLeft = "30";
+const handleTimer = (io, socket, room, roomData, timeLeft) => {
+    console.log(timeLeft);
+    // while (timeLeft > 0) {
 
+
+    function setTime() {
+        // Sets interval in variable
+        var timerInterval = setInterval(function() {
+                console.log("Do I Work?");
+                timeLeft--;
+                // timeEl.textContent = "Timer: " + timeLeft;
+
+                if (timeLeft <= 0) {
+                    // Stops execution of action at set interval
+                    clearInterval(timerInterval);
+                    // Calls function to create and append image
+                }
+                console.log("data : " + timeLeft);
+                io.to(room).emit('startTime', timeLeft)
+            },
+            1000);
+    }
+    // console.log("loop : " + timeLeft);
+    setTime();
+    // }
+    // io.to(room).emit('startTime', {
+    //     timeLeft
+    // });
+
+}
+
+// handleTimer();
 const handleConnection = (io, socket) => {
     console.log(`User connected: ${socket.id}`)
 }
@@ -16,7 +48,7 @@ const handleJoinRoom = (io, socket, room, roomData) => {
     roomData[room].users.push(socket.id);
     console.log(roomData[room])
     io.to(room).emit("updateRoomData", roomData[room])
-
+    handleTimer(io, socket, room, roomData, timeLeft);
 }
 
 const handleMessage = (io, socket, room, message, roomData) => {
@@ -27,8 +59,8 @@ const handleMessage = (io, socket, room, message, roomData) => {
 
 const handleDraw = (io, socket, room, change, roomData) => {
     console.log(`Draw event from socket ${socket.id} in room: ${room}`)
-    // console.log(change); //socket is able to read the change 
-    io.to(room).emit('drawChange',  change )
+        // console.log(change); //socket is able to read the change 
+    io.to(room).emit('drawChange', change)
 }
 
 const handleLeave = (io, socket, room, roomData) => {
@@ -62,7 +94,7 @@ const handleDisconnect = (io, socket, roomData, socketRoomMap) => {
 
         if (roomData[roomId].count <= 0) {
             delete roomData[roomId]
-        } else[
+        } else [
             io.to(roomId).emit('updateRoomData', roomData[roomId])
         ]
     }
@@ -80,6 +112,24 @@ const gameFunction = (io, socket, roomData) => {
 
     // 3. Start timer
 
+    handleTimer();
+
+    // function setTime() {
+    //     // Sets interval in variable
+    //     var timerInterval = setInterval(function() {
+    //         timeLeft--;
+    //         // timeEl.textContent = "Timer: " + secondsLeft;
+
+    //         if (secondsLeft <= 0) {
+    //             // Stops execution of action at set interval
+    //             clearInterval(timerInterval);
+    //             // Calls function to create and append image
+    //         }
+    //     }, 1000);
+    // }
+    // setTime();
+    // console.log(secondsLeft);
+
     // 4. Intake guesses from users, validate against current word
 
     // 5. Assign scores for correct words based on time left, and display on front end.
@@ -94,5 +144,6 @@ module.exports = {
     handleDraw,
     handleLeave,
     handleDisconnect,
-    handleRoomRequest
+    handleRoomRequest,
+    handleTimer
 }
