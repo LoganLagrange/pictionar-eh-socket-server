@@ -38,18 +38,23 @@ const handleConnection = (io, socket) => {
 
 const handleJoinRoom = (io, socket, room, roomData) => {
     socket.join(room);
-    console.log(`${socket.id} joined room ${room}`)
-    socket.emit(`Welcome to ${room}`)
+    console.log(`${socket.id} joined room ${room}`);
+    socket.emit(`Welcome to ${room}`);
+
     if (!roomData[room]) {
-        roomData[room] = { count: 1 }
+        roomData[room] = { count: 1, users: [] };
     } else {
         roomData[room].count += 1;
     }
+
     roomData[room].users.push(socket.id);
-    console.log(roomData[room])
-    io.to(room).emit("updateRoomData", roomData[room])
+    console.log(roomData[room]);
+
+    io.to(room).emit("updateRoomData", roomData[room]);
+
     handleTimer(io, socket, room, roomData, timeLeft);
 }
+
 
 const handleMessage = (io, socket, room, message, roomData) => {
     console.log(`Received message from ${socket.id}: ${message} in room ${room}`)
