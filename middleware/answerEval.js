@@ -10,7 +10,7 @@ function checkForWinningPhrase(inboundString, randomlySelectedWord) {
     const wordPairs = words.slice(0, -1).map((word, index) => `${word} ${words[index + 1]}`);
     
     // Check if any word pair or individual word matches the randomlySelectedWord
-    return wordPairs.some(pair => pair === randomlySelectedWordLower) || words.some(word => word === randomlySelectedWord);
+    return wordPairs.some(pair => pair === randomlySelectedWordLower) || words.some(word => word === randomlySelectedWordLower);
 }
 
 // // Example usage
