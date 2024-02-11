@@ -4,7 +4,7 @@ const { handleDraw, handleConnection, handleJoinRoom, handleMessage, handleLeave
 const initializeSocketServer = (server) => {
     const io = new Server(server, {
         cors: {
-            origin: "http://localhost:5173",
+            origin: "https://pictionar-eh.netlify.app/",
             methods: ["GET", "POST"]
         }
     });
