@@ -1,5 +1,37 @@
-const {selectDrawer} = require('../middleware/selectDrawer')
-const {getRandomWord} = require('../middleware/randomAnswer')
+const { selectDrawer } = require('../middleware/selectDrawer')
+var timeLeft = "30";
+const handleTimer = (io, socket, room, roomData, timeLeft) => {
+    console.log(timeLeft);
+    // while (timeLeft > 0) {
+
+
+    function setTime() {
+        // Sets interval in variable
+        var timerInterval = setInterval(function() {
+                console.log("Do I Work?");
+                timeLeft--;
+                // timeEl.textContent = "Timer: " + timeLeft;
+
+                if (timeLeft <= 0) {
+                    // Stops execution of action at set interval
+                    clearInterval(timerInterval);
+                    // Calls function to create and append image
+                }
+                console.log("data : " + timeLeft);
+                io.to(room).emit('startTime', timeLeft)
+            },
+            1000);
+    }
+    // console.log("loop : " + timeLeft);
+    setTime();
+    // }
+    // io.to(room).emit('startTime', {
+    //     timeLeft
+    // });
+
+}
+
+// handleTimer();const {getRandomWord} = require('../middleware/randomAnswer')
 const {checkForWinningPhrase} = require('../middleware/answerEval')
 
 const handleConnection = (io, socket) => {
@@ -8,18 +40,24 @@ const handleConnection = (io, socket) => {
 
 const handleJoinRoom = (io, socket, room, roomData) => {
     socket.join(room);
-    console.log(`${socket.id} joined room ${room}`)
-    socket.emit(`Welcome to ${room}`)
+    console.log(`${socket.id} joined room ${room}`);
+    socket.emit(`Welcome to ${room}`);
+
     if (!roomData[room]) {
-        roomData[room] = { count: 1 }
+        roomData[room] = { count: 1, users: [] };
     } else {
         roomData[room].count += 1;
     }
-    roomData[room].users.push(socket.id);
-    console.log(roomData[room])
-    io.to(room).emit("updateRoomData", roomData[room])
 
+    roomData[room].users.push(socket.id);
+    console.log(roomData[room]);
+
+    io.to(room).emit("updateRoomData", roomData[room]);
+
+    handleTimer(io, socket, room, roomData, timeLeft);
 }
+
+
 
 const handleMessage = (io, socket, room, message, roomData, username) => {
     console.log(`Received message from ${socket.id}: ${message} in room ${room}`)
@@ -36,8 +74,8 @@ const handleMessage = (io, socket, room, message, roomData, username) => {
 
 const handleDraw = (io, socket, room, change, roomData) => {
     console.log(`Draw event from socket ${socket.id} in room: ${room}`)
-    // console.log(change); //socket is able to read the change 
-    io.to(room).emit('drawChange',  change )
+        // console.log(change); //socket is able to read the change 
+    io.to(room).emit('drawChange', change)
 }
 
 const handleLeave = (io, socket, room, roomData) => {
@@ -71,7 +109,7 @@ const handleDisconnect = (io, socket, roomData, socketRoomMap) => {
 
         if (roomData[roomId].count <= 0) {
             delete roomData[roomId]
-        } else[
+        } else [
             io.to(roomId).emit('updateRoomData', roomData[roomId])
         ]
     }
@@ -91,7 +129,25 @@ const gameFunction = (io, socket, room, roomData) => {
         // Choose who draws
         selectDrawer(io, socket, room, roomData)
 
-        // 
+    // 3. Start timer
+
+    handleTimer();
+
+    // function setTime() {
+    //     // Sets interval in variable
+    //     var timerInterval = setInterval(function() {
+    //         timeLeft--;
+    //         // timeEl.textContent = "Timer: " + secondsLeft;
+
+    //         if (secondsLeft <= 0) {
+    //             // Stops execution of action at set interval
+    //             clearInterval(timerInterval);
+    //             // Calls function to create and append image
+    //         }
+    //     }, 1000);
+    // }
+    // setTime();
+    // console.log(secondsLeft);
 
     }).catch(err => {
         console.error("Error fetching word:", err);
@@ -110,5 +166,6 @@ module.exports = {
     handleLeave,
     handleDisconnect,
     handleRoomRequest,
+    handleTimer,
     gameFunction
 }
