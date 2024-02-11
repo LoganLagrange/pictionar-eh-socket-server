@@ -11,7 +11,8 @@ const initializeSocketServer = (server) => {
     const roomData = {
         room1: {
             users: [],
-            count: 1
+            count: 1,
+            currentWord: 'tacos'
         },
         room2: {
             users: [],
@@ -33,8 +34,8 @@ const initializeSocketServer = (server) => {
             console.log(`socketmap: ${socketRoomMap}`)
         })
 
-        socket.on('message', (room, message) => {
-            handleMessage(io, socket, room, message, roomData)
+        socket.on('message', (room, message, username) => {
+            handleMessage(io, socket, room, message, roomData, username)
         })
 
         socket.on('draw', (room, change) => {
