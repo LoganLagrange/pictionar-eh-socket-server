@@ -1,4 +1,5 @@
 const { selectDrawer } = require('../middleware/selectDrawer')
+const { sendWord } = require('../middleware/sendWord');
 var timeLeft = "30";
 const handleTimer = (io, socket, room, roomData, timeLeft) => {
     console.log(timeLeft);
@@ -139,7 +140,10 @@ const gameFunction = (io, socket, room, roomData) => {
         roomData[room].currentWord = word;
 
         // Choose who draws
-        selectDrawer(io, socket, room, roomData)
+        selectDrawer(io, socket, room, roomData);
+
+        // Send word to front
+        sendWord(io, socket, room, roomData);
 
     // 3. Start timer
 
