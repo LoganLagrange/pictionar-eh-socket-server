@@ -3,22 +3,20 @@ var timeLeft = "30";
 const handleTimer = (io, socket, room, roomData, timeLeft) => {
     console.log(timeLeft);
     // while (timeLeft > 0) {
-
+    roomData[room].timeLeft = timeLeft
 
     function setTime() {
         // Sets interval in variable
         var timerInterval = setInterval(function() {
-                console.log("Do I Work?");
-                timeLeft--;
+            roomData[room].timeLeft--;
                 // timeEl.textContent = "Timer: " + timeLeft;
 
-                if (timeLeft <= 0) {
+                if (roomData[room].timeLeft <= 0) {
                     // Stops execution of action at set interval
                     clearInterval(timerInterval);
                     // Calls function to create and append image
                 }
-                console.log("data : " + timeLeft);
-                io.to(room).emit('startTime', timeLeft)
+                io.to(room).emit('startTime', roomData[room].timeLeft)
             },
             1000);
     }
@@ -31,7 +29,8 @@ const handleTimer = (io, socket, room, roomData, timeLeft) => {
 
 }
 
-// handleTimer();const {getRandomWord} = require('../middleware/randomAnswer')
+// handleTimer();
+const {getRandomWord} = require('../middleware/randomAnswer')
 const {checkForWinningPhrase} = require('../middleware/answerEval')
 
 const handleConnection = (io, socket) => {
@@ -54,20 +53,32 @@ const handleJoinRoom = (io, socket, room, roomData) => {
 
     io.to(room).emit("updateRoomData", roomData[room]);
 
-    handleTimer(io, socket, room, roomData, timeLeft);
+    roomData[room].gameRunning = false;
+
+    // handleTimer(io, socket, room, roomData, timeLeft);
+    if(roomData[room].users.length >= 2) {
+        if(roomData[room].gameRunning === false) {
+            gameFunction(io, socket, room, roomData);
+            roomData[room].gameRunning = true
+        }
+        
+    }
+    
 }
 
 
 
 const handleMessage = (io, socket, room, message, roomData, username) => {
     console.log(`Received message from ${socket.id}: ${message} in room ${room}`)
+    console.log('currentword', roomData[room])
     // Check if currentWord exists
     if(roomData[room].currentWord) {
         // Check if word matches and send corresponding boolean value
         const correctBool = checkForWinningPhrase(message, roomData[room].currentWord);
-        io.to(room).emit('broadcastMessage', { message }, username, correctBool);
+        console.log(correctBool);
+        io.to(room).emit('broadcastMessage',  message , username, correctBool, roomData[room].timeLeft);
     } else {
-        io.to(room).emit('broadcastMessage', { message, correctBool: false}, username );
+        io.to(room).emit('broadcastMessage', {  correctBool: false},  username );
     }
     
 }
@@ -85,7 +96,7 @@ const handleLeave = (io, socket, room, roomData) => {
         roomData[room].count -= 1;
 
         if (roomData[room].count <= 0) {
-            delete roomData[room];
+            // delete roomData[room];
         } else {
             io.to(room).emit('updateRoomData', roomData[room])
         }
@@ -94,7 +105,8 @@ const handleLeave = (io, socket, room, roomData) => {
         const userIndex = roomData[room].users.indexOf(socket.id);
         // Check that they are present in the array and remove
         if (userIndex !== -1) {
-            roomData[room].users.splice(index, 1);
+            roomData[room].users.splice(userIndex, 1);
+            console.log(roomData[room])
         }
     }
 
@@ -131,7 +143,7 @@ const gameFunction = (io, socket, room, roomData) => {
 
     // 3. Start timer
 
-    handleTimer();
+    handleTimer(io, socket, room, roomData, timeLeft);
 
     // function setTime() {
     //     // Sets interval in variable
