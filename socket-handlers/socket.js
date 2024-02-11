@@ -29,7 +29,7 @@ const handleMessage = (io, socket, room, message, roomData, username) => {
         const correctBool = checkForWinningPhrase(message, roomData[room].currentWord);
         io.to(room).emit('broadcastMessage', { message }, username, correctBool);
     } else {
-        io.to(room).emit('broadcastMessage', { message }, username);
+        io.to(room).emit('broadcastMessage', { message, correctBool: false}, username );
     }
     
 }
