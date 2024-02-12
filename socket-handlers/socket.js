@@ -1,6 +1,6 @@
 const { selectDrawer } = require('../middleware/selectDrawer')
 const { sendWord } = require('../middleware/sendWord');
-var timeLeft = "30";
+var timeLeft = "60";
 const handleTimer = (io, socket, room, roomData, timeLeft) => {
     console.log(timeLeft);
     // while (timeLeft > 0) {
